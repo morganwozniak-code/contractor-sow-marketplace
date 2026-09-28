@@ -7,7 +7,7 @@ user-invocable: true
 disable-model-invocation: false
 license: MIT
 compatibility: droid
-version: 0.4.0
+version: 0.5.0
 metadata:
   owner: contractor-sow-marketplace
   department: general
@@ -45,7 +45,8 @@ or similar:
    `replacement SOW` request. Do not draft contract language yet.
 2. Explain that the skill will present an intake form, validate the business facts,
    identify review flags, and then prepare a draft for human review.
-3. Present the form fields from `intake-form.md` in concise sections.
+3. Start with the three routing questions below. Do not dump the full form in the
+   first response.
 4. If the requester answers only part of the form, ask only for the remaining
    fields.
 5. Before drafting, show a normalized fact summary and review flags.
@@ -58,22 +59,44 @@ or similar:
 Use this opening:
 
 ```text
-I can prepare a draft contractor SOW or agreement package, but I need the engagement
-facts first. I will walk you through the contractor intake form, validate the
-answers, and automatically generate the draft once the required fields are complete.
-You can paste the completed form or answer these sections one at a time:
+I can help with that. I will ask a few questions at a time, keep track of what is
+complete, and prepare the draft automatically when the required facts are ready.
 
-1. Request type and template
-2. Contractor and client parties
-3. Services, schedule, location, and access
-4. Worker-classification confirmations
-5. Fees, caps, expenses, invoicing, and renewal
-6. Equity and intellectual-property details
-7. Risk flags, notes, and required reviewers
-
-Please provide the approved base agreement or SOW template if one exists. I will
-identify missing information and review flags before drafting anything.
+First:
+1. Is this a new contractor, a renewal, a scope change, a fee change, or a
+   replacement SOW?
+2. Do you need a full agreement package, an SOW-only update, or a neutral draft?
+3. Do you already have the approved agreement or SOW template?
 ```
+
+### Progressive intake
+
+Do not display all of `intake-form.md` at once unless the requester asks for the
+full form. Ask only the next relevant section and show a compact progress marker:
+
+```text
+Contractor request progress: 2 of 5 sections complete
+Next: contractor and client details
+Still needed: scope, schedule, compensation, risk review
+```
+
+Use this order:
+
+1. **Route the request:** request type, package mode, and approved source.
+2. **Identify the parties:** contractor, signatory, client entity, requester, and
+   business owner.
+3. **Define the work:** project, services, deliverables, acceptance criteria,
+   schedule, location, access, and term.
+4. **Confirm money:** fee type, rate or amount, cap, expenses, invoicing, and
+   renewal terms when applicable.
+5. **Screen risk:** classification, data, export/government work, IP, subcontractors,
+   international work, equity, and required reviewers.
+
+Skip fields that do not apply, label them `Not applicable`, and explain why. For an
+existing engagement, ask for the current agreement/SOW identifier and the requested
+delta before asking for new-contract details. For a full package, ask for the
+approved template before drafting. After each answer, echo only the newly captured
+facts and the remaining items.
 
 Do not skip intake because the requester calls the engagement “standard.” A
 standard request still needs the fields in `intake-form.md`.

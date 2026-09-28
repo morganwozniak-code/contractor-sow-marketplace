@@ -35,8 +35,9 @@ You can also start the workflow directly with:
 ```
 
 The skill keeps the form state across replies, reports missing or blocked fields,
-validates rates and caps, and generates the draft in chat when the status reaches
-`READY TO DRAFT`. It does not upload, sign, approve, or route the document.
+validates rates and caps, asks only the relevant follow-up questions, and generates
+the draft in chat when the status reaches `READY TO DRAFT`. It does not upload,
+sign, approve, or route the document.
 
 ## Scope and safety
 
