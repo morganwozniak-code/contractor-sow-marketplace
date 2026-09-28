@@ -1,13 +1,13 @@
 ---
 name: contractor-sow-drafter
-description: Presents a structured contractor intake form, validates the answers, and automatically prepares a draft Statement of Work or agreement package using an approved user-provided template. Use for new contractors, renewals, scope changes, fee changes, and replacement SOWs. This produces drafts for qualified human legal review, not legal advice or final contracts.
+description: Presents a structured contractor intake form, validates the answers, and automatically prepares a draft Statement of Work or agreement package using an approved user-provided template. Use for net-new contractors and existing-contractor renewals or changes. This produces drafts for qualified human legal review, not legal advice or final contracts.
 allowed-tools: []
 enabled: true
 user-invocable: true
 disable-model-invocation: false
 license: MIT
 compatibility: droid
-version: 0.2.0
+version: 0.4.0
 metadata:
   owner: contractor-sow-marketplace
   department: general
@@ -18,8 +18,9 @@ metadata:
 ## Purpose and boundary
 
 Help a requester collect complete business facts and prepare a draft Statement of
-Work (SOW) or contractor agreement package. The output is a drafting aid for human
-review. It is not legal advice, a classification determination, a guarantee of
+Work (SOW) or contractor agreement package for a net-new contractor or an update to
+an existing contractor engagement. The output is a drafting aid for human review.
+It is not legal advice, a classification determination, a guarantee of
 enforceability, tax advice, or proof that any approval or signature exists.
 
 This skill is intentionally vendor-neutral. It does not connect to, write to, or
@@ -37,10 +38,11 @@ answers into the form fields and retain them across follow-up turns.
 
 ## First-response behavior
 
-When the requester says only “I need a contractor SOW,” “help me hire a
-contractor,” or similar:
+When the requester says only “I need a contractor SOW,” “help me hire a contractor,”
+or similar:
 
-1. Do not draft contract language yet.
+1. Ask whether this is a `net-new`, `renewal`, `scope change`, `fee change`, or
+   `replacement SOW` request. Do not draft contract language yet.
 2. Explain that the skill will present an intake form, validate the business facts,
    identify review flags, and then prepare a draft for human review.
 3. Present the form fields from `intake-form.md` in concise sections.
@@ -56,12 +58,12 @@ contractor,” or similar:
 Use this opening:
 
 ```text
-I can prepare a draft contractor SOW, but I need the engagement facts first. I will
-walk you through the contractor intake form, validate the answers, and automatically
-generate the draft once the required fields are complete. You can paste the
-completed form or answer these sections one at a time:
+I can prepare a draft contractor SOW or agreement package, but I need the engagement
+facts first. I will walk you through the contractor intake form, validate the
+answers, and automatically generate the draft once the required fields are complete.
+You can paste the completed form or answer these sections one at a time:
 
-1. Request and template
+1. Request type and template
 2. Contractor and client parties
 3. Services, schedule, location, and access
 4. Worker-classification confirmations
@@ -76,11 +78,31 @@ identify missing information and review flags before drafting anything.
 Do not skip intake because the requester calls the engagement “standard.” A
 standard request still needs the fields in `intake-form.md`.
 
+## Engagement types and package modes
+
+This skill supports both net-new contractors and updates to existing contractor
+engagements:
+
+- For `net-new`, prepare a full agreement package when an approved agreement is
+  provided, or a neutral draft SOW when it is not.
+- For `renewal`, `scope change`, `fee change`, or `replacement SOW`, normally
+  prepare an SOW-only update tied to the existing agreement. Identify whether the
+  base agreement must be re-executed instead of assuming the replacement SOW is
+  sufficient.
+- A `neutral draft SOW` is allowed for either type only when it is clearly labeled
+  as an unapproved generic draft.
+
+For an existing engagement, collect the existing agreement or SOW identifier and
+effective date, preserve the relationship to the base agreement, and do not create
+a second engagement record merely because the scope or fees changed.
+
 ## Structured intake form
 
 Use `intake-form.md` as the canonical field list. The form reflects the fields
 commonly needed by a complete contractor workflow, including:
 
+- request type, requested package, approved source-template status, and existing
+  agreement/SOW identifier when applicable;
 - contractor legal/entity name, contractor type, title, email, mailing address, and
   authorized signatory;
 - client legal entity, requester, business owner, department, and client
@@ -90,7 +112,6 @@ commonly needed by a complete contractor workflow, including:
 - worker-classification confirmations and notes;
 - fee type, project fee, hourly rate, maximum chargeable amount, maximum-hours cap,
   expenses, invoicing, and currency;
-- renewal type and renewal term number/unit;
 - equity grant type, share count, vesting schedule, custom vesting, and approval
   status; and
 - preexisting IP, third-party/open-source materials, subcontractors, regulated
@@ -112,12 +133,15 @@ After every response, merge new answers into the form and report one status:
 It does not mean upload, sign, approve, route, or create a record in an external
 system.
 
-For a net-new request, require at minimum: contractor identity and contact data,
-request type, project/services, deliverables and acceptance criteria, client
-representative, start date, initial term or completion event, work location,
-fee/cap information, expense and invoicing terms, approved template status, and
-risk-screen answers. Apply the conditional fields for equity, renewals, IP,
-subcontractors, international work, regulated data, and system access.
+For every request, require at minimum: request type, contractor identity and
+contact data, project/services, deliverables and acceptance criteria, client
+representative, start date, term or completion event, work location, fee/cap
+information, expense and invoicing terms, approved template status, and risk-screen
+answers. For a net-new request, confirm that the contractor is new to the
+organization. For an existing engagement, require the existing agreement or SOW
+identifier, effective date, requested change, and the base agreement or template.
+Apply the conditional fields for equity, renewals, IP, subcontractors,
+international work, regulated data, and system access.
 
 For an hourly or daily fee, validate that the rate, maximum hours, and maximum
 chargeable amount are present and mathematically consistent. For project or
@@ -139,6 +163,7 @@ Collect or mark as `Unknown`:
 - Requester, business owner, department, and client point of contact.
 - Request type: `net-new`, `renewal`, `scope change`, `fee change`, or
   `replacement SOW`.
+- Requested package: `full agreement package`, `SOW-only`, or `neutral draft SOW`.
 - Existing agreement/SOW identifier and effective date for an existing engagement.
 
 ### Services and schedule
@@ -200,8 +225,8 @@ and route the item for review instead of treating it as `No`:
 4. Populate only verified facts.
 5. For a net-new engagement, include the full approved agreement plus the completed
    SOW if the requester asks for an agreement package or the template requires it.
-6. For an existing engagement, do not assume a replacement SOW is sufficient.
-   Identify whether the base agreement must be re-executed.
+6. For a renewal, scope change, fee change, or replacement SOW, prepare the
+   requested SOW update and identify whether the base agreement must be re-executed.
 7. State any template version, effective date, or source-file uncertainty.
 
 ### When no approved template is provided
@@ -280,7 +305,7 @@ For a full package:
 
 For SOW-only:
 
-- Completed SOW.
+- Completed SOW or change order tied to the existing agreement or SOW identifier.
 - Identifier and version/date of the base agreement it relies on.
 - Any uncertainty about whether the base agreement must be re-executed.
 
@@ -292,6 +317,7 @@ For a neutral draft SOW:
 ### 3. Review record
 
 - Request type and contractor legal name.
+- Existing agreement/SOW identifier and effective date, when applicable.
 - Package mode and source-template version, if any.
 - Scope, schedule, and compensation summary.
 - Maximum financial exposure.

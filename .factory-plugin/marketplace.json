@@ -7,7 +7,7 @@
   "plugins": [
     {
       "name": "contractor-sow",
-      "description": "Guided contractor intake and draft SOW generation using a user-provided approved agreement or template.",
+      "description": "Guided contractor intake and draft SOW or agreement package generation using a user-provided approved agreement or template.",
       "source": "./plugins/contractor-sow",
       "category": "business"
     }

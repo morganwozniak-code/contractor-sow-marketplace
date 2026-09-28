@@ -36,9 +36,11 @@ block drafting. Do not place passwords, API keys, or access tokens in this form.
 - Acceptance criteria for each deliverable: `[value]`
 - Schedule of work/milestones/dependencies: `[value]`
 - Desired start date: `[YYYY-MM-DD]`
-- Initial term number: `[value]`
-- Initial term unit: `[days | weeks | months | years | completion event]`
+- Term number: `[value]`
+- Term unit: `[days | weeks | months | years | completion event]`
 - End date or objective completion event, if known: `[value]`
+- Existing engagement baseline or current SOW: `[not applicable or value]`
+- Requested renewal, scope, fee, or replacement details: `[not applicable or value]`
 - Expected hours and maximum-hours cap: `[value]`
 - Work location: `[remote | client site | other]`
 - Travel or on-site requirements: `[value or none]`
@@ -55,7 +57,7 @@ block drafting. Do not place passwords, API keys, or access tokens in this form.
 - Contractor is not requesting employee benefits: `[yes | no | unknown]`
 - Classification notes or reviewer comments: `[value or none]`
 
-## 5. Fees, expenses, invoicing, and renewal
+## 5. Fees, expenses, and invoicing
 
 - Fee type: `[fixed/project | hourly/daily | milestone | equity/non-cash]`
 - Project/fixed fee amount: `[value or not applicable]`

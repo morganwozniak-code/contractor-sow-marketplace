@@ -2,7 +2,7 @@
 
 This public Factory marketplace provides a vendor-neutral skill for collecting
 contractor engagement facts through a structured intake form and automatically
-preparing draft Statements of Work.
+preparing draft Statements of Work or agreement packages.
 
 It does **not** contain a company's agreement, legal playbook, approval routing,
 internal identifiers, or HR/payroll integration. Users should provide their own
@@ -42,8 +42,11 @@ validates rates and caps, and generates the draft in chat when the status reache
 
 The skill can prepare:
 
-- a draft SOW from user-supplied business facts;
-- a package based on a user-supplied approved agreement;
+- a full agreement package for a net-new contractor when the user supplies an
+  approved agreement or template;
+- an SOW-only renewal, scope change, fee change, or replacement SOW tied to an
+  existing agreement;
+- a neutral draft SOW when no approved template is available;
 - a review record and list of unresolved issues.
 
 It does not determine worker classification, guarantee enforceability, provide
