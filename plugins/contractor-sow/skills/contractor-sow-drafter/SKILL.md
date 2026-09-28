@@ -1,13 +1,13 @@
 ---
 name: contractor-sow-drafter
-description: Guides a requester through the facts needed for a contractor engagement and prepares a draft Statement of Work or agreement package using an approved user-provided template. Use for new contractors, renewals, scope changes, fee changes, and replacement SOWs. This produces drafts for qualified human legal review, not legal advice or final contracts.
+description: Presents a structured contractor intake form, validates the answers, and automatically prepares a draft Statement of Work or agreement package using an approved user-provided template. Use for new contractors, renewals, scope changes, fee changes, and replacement SOWs. This produces drafts for qualified human legal review, not legal advice or final contracts.
 allowed-tools: []
 enabled: true
 user-invocable: true
 disable-model-invocation: false
 license: MIT
 compatibility: droid
-version: 0.1.0
+version: 0.2.0
 metadata:
   owner: contractor-sow-marketplace
   department: general
@@ -30,43 +30,100 @@ Use the requester's approved agreement, SOW template, policy, or playbook when o
 is provided. Do not invent a company's legal terms or imply that this generic skill
 is an organization's approved form.
 
+The companion `intake-form.md` is the structured form for this skill. It is a
+conversational form: the requester may paste a completed copy, answer one section
+at a time, or provide the facts in ordinary language. The skill must normalize the
+answers into the form fields and retain them across follow-up turns.
+
 ## First-response behavior
 
 When the requester says only “I need a contractor SOW,” “help me hire a
 contractor,” or similar:
 
 1. Do not draft contract language yet.
-2. Explain that the skill will collect business facts, identify review flags, and
-   then prepare a draft for human review.
-3. Ask the intake questions below in a concise numbered checklist.
-4. If the requester answers only part of the checklist, ask only for the remaining
-   items.
-5. Before drafting, show a normalized fact summary and review flags. Ask the
-   requester to correct factual errors.
+2. Explain that the skill will present an intake form, validate the business facts,
+   identify review flags, and then prepare a draft for human review.
+3. Present the form fields from `intake-form.md` in concise sections.
+4. If the requester answers only part of the form, ask only for the remaining
+   fields.
+5. Before drafting, show a normalized fact summary and review flags.
+6. When all required fields are complete and no blocking condition remains,
+   automatically generate the draft in that response. Do not ask the requester to
+   issue a separate “generate” command.
+7. If the summary contains a contradiction or the requester says a fact is wrong,
+   pause and ask for the correction before drafting.
 
 Use this opening:
 
 ```text
-I can prepare a draft contractor SOW, but I need the engagement facts first. Please
-provide:
+I can prepare a draft contractor SOW, but I need the engagement facts first. I will
+walk you through the contractor intake form, validate the answers, and automatically
+generate the draft once the required fields are complete. You can paste the
+completed form or answer these sections one at a time:
 
-1. Contractor legal name, individual or entity, country/state, email, and notice
-   address.
-2. Request type: net-new, renewal, scope change, fee change, or replacement SOW.
-3. Project name, services, deliverables, acceptance criteria, milestones, and
-   client point of contact.
-4. Start date, end date or completion event, work location, and expected hours.
-5. Fee type, rate or fixed amount, maximum exposure, expenses, and invoicing terms.
-6. Whether the work involves personal data, confidential data, production systems,
-   regulated or export-controlled information, government work, subcontractors,
-   third-party/open-source materials, international activity, equity, or requested
-   changes to an existing agreement.
-7. The approved base agreement or SOW template, if one exists.
+1. Request and template
+2. Contractor and client parties
+3. Services, schedule, location, and access
+4. Worker-classification confirmations
+5. Fees, caps, expenses, invoicing, and renewal
+6. Equity and intellectual-property details
+7. Risk flags, notes, and required reviewers
 
-I will identify missing information and review flags before drafting anything.
+Please provide the approved base agreement or SOW template if one exists. I will
+identify missing information and review flags before drafting anything.
 ```
 
-Do not skip intake because the requester calls the engagement “standard.”
+Do not skip intake because the requester calls the engagement “standard.” A
+standard request still needs the fields in `intake-form.md`.
+
+## Structured intake form
+
+Use `intake-form.md` as the canonical field list. The form reflects the fields
+commonly needed by a complete contractor workflow, including:
+
+- contractor legal/entity name, contractor type, title, email, mailing address, and
+  authorized signatory;
+- client legal entity, requester, business owner, department, and client
+  representative;
+- project description, services, deliverables, schedule of work, work location,
+  desired start date, initial term number/unit, and requested system access;
+- worker-classification confirmations and notes;
+- fee type, project fee, hourly rate, maximum chargeable amount, maximum-hours cap,
+  expenses, invoicing, and currency;
+- renewal type and renewal term number/unit;
+- equity grant type, share count, vesting schedule, custom vesting, and approval
+  status; and
+- preexisting IP, third-party/open-source materials, subcontractors, regulated
+  information, government work, international work, and additional notes.
+
+### Form status and automatic generation
+
+After every response, merge new answers into the form and report one status:
+
+- `NEEDS INFORMATION` - one or more required fields are missing. Show only the
+  missing fields and ask for them.
+- `BLOCKED` - a required source, qualified reviewer, or risk decision is missing.
+  Do not draft contract text.
+- `READY TO DRAFT` - all required facts are present and no blocking condition
+  remains. Show the normalized summary and review flags, then automatically produce
+  the draft agreement package or SOW in the same response.
+
+“Automatically generate” means generate the draft text in the current conversation.
+It does not mean upload, sign, approve, route, or create a record in an external
+system.
+
+For a net-new request, require at minimum: contractor identity and contact data,
+request type, project/services, deliverables and acceptance criteria, client
+representative, start date, initial term or completion event, work location,
+fee/cap information, expense and invoicing terms, approved template status, and
+risk-screen answers. Apply the conditional fields for equity, renewals, IP,
+subcontractors, international work, regulated data, and system access.
+
+For an hourly or daily fee, validate that the rate, maximum hours, and maximum
+chargeable amount are present and mathematically consistent. For project or
+milestone fees, validate the amount and payment-triggering acceptance event. For
+equity, require grant type, quantity, vesting, plan/document status, and qualified
+review.
 
 ## Required intake
 
@@ -205,9 +262,15 @@ No completed contract text has been generated.
 
 ## Required output
 
-Return exactly these sections after blocking checks pass:
+Return exactly these sections after the form reaches `READY TO DRAFT`:
 
-### 1. Draft agreement package
+### 1. Intake result
+
+- Status: `READY TO DRAFT`.
+- Normalized field summary.
+- Review flags and required reviewers.
+
+### 2. Draft agreement package
 
 For a full package:
 
@@ -226,7 +289,7 @@ For a neutral draft SOW:
 - Clearly label it `Generic draft - not an approved legal form`.
 - Include only the requested business terms and neutral drafting language.
 
-### 2. Review record
+### 3. Review record
 
 - Request type and contractor legal name.
 - Package mode and source-template version, if any.
@@ -236,7 +299,7 @@ For a neutral draft SOW:
 - Documents or approvals still needed.
 - Status: `Draft for human legal review`.
 
-### 3. Open items
+### 4. Open items
 
 List unresolved facts, source-template questions, and required reviews. Never say
 that the document is legally final or approved.
