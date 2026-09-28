@@ -1,0 +1,16 @@
+{
+  "name": "contractor-sow",
+  "description": "Public, vendor-neutral contractor intake and draft Statement of Work generation. Users provide their own approved agreement or template; outputs require human legal review.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Contractor SOW Marketplace Contributors"
+  },
+  "license": "MIT",
+  "keywords": [
+    "contractor",
+    "statement-of-work",
+    "sow",
+    "services-agreement",
+    "legal-review"
+  ]
+}

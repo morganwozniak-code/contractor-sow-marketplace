@@ -1,0 +1,15 @@
+{
+  "name": "contractor-sow-marketplace",
+  "description": "Public, vendor-neutral Droid skills for collecting contractor engagement facts and preparing draft Statements of Work for human legal review.",
+  "owner": {
+    "name": "Contractor SOW Marketplace Contributors"
+  },
+  "plugins": [
+    {
+      "name": "contractor-sow",
+      "description": "Guided contractor intake and draft SOW generation using a user-provided approved agreement or template.",
+      "source": "./plugins/contractor-sow",
+      "category": "business"
+    }
+  ]
+}
